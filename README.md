@@ -87,7 +87,7 @@ We will integrate AI not only in the **app features** but also in the **developm
 
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/quillinsight.git
+git clone https://github.com/oluwaseyipd/quillinsight.git
 cd quillinsight
 
 # Install dependencies
@@ -99,3 +99,11 @@ cp .env.example .env.local
 
 # Run development server
 npm run dev
+```
+App runs locally at: http://localhost:3000
+
+## 🤝 Contributing
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## 📄 License
+This project is licensed under the MIT License.
