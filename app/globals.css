@@ -1,26 +1,94 @@
+/* globals.css */
+
+/*
+  Imports Tailwind CSS and sets up the CSS-first configuration.
+  This file combines all custom themes, brand colors, and fonts
+  using the @theme and @layer directives, as per Tailwind CSS v4.
+*/
+
 @import "tailwindcss";
 
+/* Base Brand Colors - These are available across all themes */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --color-brand: #6b4de6;
+    --color-brand-light: #8f73ff;
+    --color-brand-dark: #5236b8;
 }
 
+/*
+  Defining a @layer for base styles, which includes the custom themes.
+  Each theme is defined as a class that sets a specific set of
+  CSS variables for background, surface, text, and accent colors.
+*/
+@layer base {
+    /* Classic Light Theme */
+    .theme-classic {
+        --color-bg: #ffffff;
+        --color-surface: #f8f9fa;
+        --color-text: #1f2937;
+        --color-accent: var(--color-brand);
+    }
+
+    /* Modern Dark Theme */
+    .theme-modern {
+        --color-bg: #1a202c;
+        --color-surface: #2d3748;
+        --color-text: #e2e8f0;
+        --color-accent: var(--color-brand);
+    }
+
+    /* Minimal Gray Theme */
+    .theme-minimal {
+        --color-bg: #f9fafb;
+        --color-surface: #ffffff;
+        --color-text: #374151;
+        --color-accent: var(--color-brand);
+    }
+
+    /* Elegant Dark Purple Theme */
+    .theme-elegant {
+        --color-bg: #111827;
+        --color-surface: #1f2937;
+        --color-text: #f9fafb;
+        --color-accent: #a78bfa;
+    }
+
+    /* Vibrant Pink Theme */
+    .theme-vibrant {
+        --color-bg: #fdf4ff;
+        --color-surface: #f3e8ff;
+        --color-text: #4c1d95;
+        --color-accent: #d946ef;
+    }
+}
+
+/*
+  The @theme directive maps custom CSS variables to
+  Tailwind's utility classes. This allows to use classes
+  like `bg-brand`, `bg-background`, `text-text`, etc.
+*/
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-brand: var(--color-brand);
+    --color-brand-light: var(--color-brand-light);
+    --color-brand-dark: var(--color-brand-dark);
+
+    --color-background: var(--color-bg);
+    --color-surface: var(--color-surface);
+    --color-text: var(--color-text);
+    --color-accent: var(--color-accent);
+
+    /* Mapping custom fonts */
+    --font-sans: Inter, ui-sans-serif, system-ui;
+    --font-heading: Poppins, ui-sans-serif, system-ui;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/*
+  Body styles reference the CSS variables, which will
+  change dynamically based on the active theme class.
+*/
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
 }
