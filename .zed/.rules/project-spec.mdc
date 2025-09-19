@@ -1,0 +1,98 @@
+description: Core rules, conventions, and architectural guidelines for the QuillInsight project.
+globs:
+alwaysApply: true
+---
+
+## Project Overview: QuillInsight (AI-Powered Notes App)
+You are an expert full-stack developer working on the QuillInsight codebase.
+Your primary goal is to build a note-taking application where users can write, organize, and manage notes.
+The application integrates AI features to generate **summaries, auto-tags, and key insights** from note content.
+
+Adhere strictly to the rules, patterns, and conventions outlined in this document to ensure **code quality, maintainability, and consistent user experience**.
+
+---
+
+## Technology Stack
+The project uses the following technologies. Do **not** introduce new libraries or frameworks without explicit instruction.
+
+- **Language:** TypeScript
+- **Main Framework:** Next.js (App Router)
+- **Database & Auth:** Supabase (Postgres + Supabase Auth + Storage)
+- **Styling:** Tailwind CSS with shadcn/ui components
+- **AI Integration:** OpenAI API (summarization, auto-tagging, highlight extraction)
+- **State Management:**
+  - Prefer Server Components for data fetching.
+  - Use `useState` or `useReducer` for local UI state in Client Components.
+- **Utility Libraries:**
+  - Use standard utilities (e.g., date-fns if needed for timestamps).
+  - Keep external dependencies minimal.
+
+---
+
+## Architecture & Code Style
+
+- **Directory Structure:** Follow standard Next.js App Router layout:
+  - `/app` → routes and pages.
+  - `/components/ui` → shadcn/ui components.
+  - `/components/` → custom, reusable components (e.g., `NoteEditor`, `NoteCard`).
+  - `/lib` → Supabase client setup, utility functions, AI integration functions.
+  - `/hooks` → custom React hooks for reusable logic.
+  - `/tests` → unit and integration tests mirroring source structure.
+
+- **Component Design:**
+  - Use **Server Components** for fetching and displaying data.
+  - Use **Client Components** only when interactivity is required (`'use client'`).
+  - Keep components small, focused, and reusable.
+
+- **Naming Conventions:**
+  - React component files: `PascalCase` (e.g., `NoteEditor.tsx`).
+  - Utility/helper functions: `camelCase` (e.g., `generateSummary.ts`).
+  - Folder names: lowercase, hyphenated (e.g., `note-editor`).
+
+- **Error Handling:**
+  - Use `try/catch` in Server Actions and Route Handlers.
+  - Show user-friendly error messages when AI or Supabase fails.
+  - Use Next.js `error.tsx` for segment-level error boundaries.
+
+- **API Keys & Secrets:**
+  - Never hardcode keys.
+  - Store secrets in `.env.local`.
+  - Access via `process.env.NEXT_PUBLIC_SUPABASE_URL`, `process.env.SUPABASE_SERVICE_ROLE_KEY`, and `process.env.OPENAI_API_KEY`.
+
+---
+
+## Code Patterns to Follow
+
+- **Notes CRUD:**
+  - Use Server Actions for creating, updating, deleting notes.
+  - Fetch notes directly in Server Components.
+
+- **AI Features:**
+  - Summarization, tagging, and highlights must be done via helper functions in `/lib/ai.ts`.
+  - Do not call OpenAI API directly inside components. Encapsulate in a function.
+  - Always handle empty or malformed inputs gracefully (return default responses).
+
+- **Forms & Mutations:**
+  - Use forms connected to **Server Actions** for note creation and updates.
+  - Do not rely on client-side `fetch` for CRUD operations.
+
+- **Styling & UI:**
+  - Use Tailwind classes consistently.
+  - Prefer `shadcn/ui` components for buttons, dialogs, inputs, and cards.
+  - Maintain clean and minimal UI.
+
+---
+
+## Verification Checklist
+Before finalizing your response, you MUST verify the following:
+
+- ✅ Does the code use the **Next.js App Router** and **Server Components** for data fetching?
+- ✅ Are **Server Actions** used for note mutations (create, update, delete)?
+- ✅ Is the Supabase client used for all database interactions?
+- ✅ Are AI features encapsulated in `/lib/ai.ts` and not scattered across components?
+- ✅ Are `shadcn/ui` components used for UI where appropriate?
+- ✅ Are Supabase and OpenAI keys loaded from `.env.local` and not hardcoded?
+- ✅ Are Tailwind CSS classes used consistently for styling?
+- ✅ Are error states handled gracefully with meaningful feedback?
+
+---
