@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthContext";
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { GoogleIcon } from "@/components/ui/GoogleIcon";
@@ -155,7 +155,7 @@ export default function LoginPage() {
             <Button
               type="button"
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 bg-white/90 backdrop-blur-sm border border-slate-200/50 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 py-3 font-semibold text-slate-700 rounded-2xl group relative overflow-hidden"
+              className="w-full flex items-center justify-center gap-3 bg-white/90 backdrop-blur-sm border border-slate-200/50 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 py-3 font-semibold text-slate-700 rounded-2xl group relative overflow-hidden"
               disabled={loading}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
