@@ -15,7 +15,7 @@ import FooterSection from "@/components/FooterSection";
 // Main Homepage Component
 export default function HomePage() {
   return (
-    <div className="theme-classic min-h-screen bg-background text-text font-sans">
+    <div className="min-h-screen bg-background text-text font-sans">
       <Header />
       <HeroSection />
       <FeaturesSection />

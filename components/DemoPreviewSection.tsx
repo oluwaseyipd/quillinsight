@@ -50,7 +50,7 @@ const DemoPreviewSection = () => (
             </div>
             <div className="flex-1 mx-4">
               <div className="bg-background/50 rounded-full px-4 py-2 text-sm text-muted-foreground text-center max-w-md mx-auto">
-                app.quillinsight.com/dashboard
+                quillinsight.com/dashboard/note/1234567890
               </div>
             </div>
             <div className="w-16" />
