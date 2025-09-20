@@ -2,161 +2,145 @@
 import { Feather } from "lucide-react";
 import React from "react";
 
-// Lucide SVGs for social icons (Twitter, LinkedIn, GitHub)
-const TwitterIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path d="M22 4.01c-.77.35-1.6.59-2.47.7a4.3 4.3 0 0 0 1.88-2.37c-.83.49-1.75.85-2.73 1.04A4.28 4.28 0 0 0 16.1 3c-2.37 0-4.29 1.92-4.29 4.29 0 .34.04.67.11.99C7.69 8.13 4.07 6.13 1.64 3.16c-.37.64-.58 1.38-.58 2.17 0 1.5.76 2.82 1.92 3.59a4.28 4.28 0 0 1-1.94-.54v.05c0 2.09 1.49 3.83 3.47 4.23-.36.1-.74.16-1.13.16-.28 0-.54-.03-.8-.08.54 1.68 2.11 2.9 3.97 2.93A8.6 8.6 0 0 1 2 19.54c-.56 0-1.11-.03-1.65-.1A12.13 12.13 0 0 0 7.29 21c7.55 0 11.69-6.26 11.69-11.69 0-.18-.01-.36-.02-.54A8.36 8.36 0 0 0 22 4.01z" />
-  </svg>
-);
+// Enhanced Footer
+const FooterSection = () => {
+  const socialIcons = {
+    Twitter: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
+      </svg>
+    ),
+    LinkedIn: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path
+          fillRule="evenodd"
+          d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"
+          clipRule="evenodd"
+        />
+      </svg>
+    ),
+    GitHub: (
+      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path
+          fillRule="evenodd"
+          d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+          clipRule="evenodd"
+        />
+      </svg>
+    ),
+  };
 
-const LinkedInIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <rect width="20" height="20" x="2" y="2" rx="5" />
-    <path d="M8 11v5" />
-    <path d="M8 8v.01" />
-    <path d="M12 16v-5" />
-    <path d="M16 16v-3a2 2 0 0 0-4 0" />
-  </svg>
-);
+  return (
+    <footer className="relative py-16 px-6 border-t border-white/10 bg-surface/30">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+          {/* Brand */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <Feather className="text-brand h-7 w-7" />
+              <span className="font-heading text-xl font-bold text-brand">
+                QuillInsight
+              </span>
+            </div>
+            <p className="text-muted-foreground">
+              Transform your notes into actionable insights with the power of
+              AI.
+            </p>
+          </div>
 
-const GitHubIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.1-1.46-1.1-1.46-.9-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 7.43c.85.004 1.71.11 2.51.32 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.74c0 .27.16.58.67.48A10.01 10.01 0 0 0 22 12c0-5.52-4.48-10-10-10z" />
-  </svg>
-);
+          {/* Quick Links */}
+          <div>
+            <h3 className="font-heading font-semibold mb-4">Product</h3>
+            <ul className="space-y-3 text-muted-foreground">
+              <li>
+                <a
+                  href="#features"
+                  className="hover:text-brand transition-colors"
+                >
+                  Features
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#pricing"
+                  className="hover:text-brand transition-colors"
+                >
+                  Pricing
+                </a>
+              </li>
+              <li>
+                <a href="#api" className="hover:text-brand transition-colors">
+                  API
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#integrations"
+                  className="hover:text-brand transition-colors"
+                >
+                  Integrations
+                </a>
+              </li>
+            </ul>
+          </div>
 
-const FooterSection: React.FC = () => (
-  <footer
-    className="bg-surface border-t border-muted-foreground/10 pt-12 pb-6 px-6"
-    aria-label="Site Footer"
-  >
-    <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-      {/* Column 1: Logo + Tagline */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2 mb-2">
-          <Feather className="text-brand h-6 w-6" />
-          <span className="font-heading text-lg font-bold text-brand">
-            QuillInsight
-          </span>
+          {/* Resources */}
+          <div>
+            <h3 className="font-heading font-semibold mb-4">Resources</h3>
+            <ul className="space-y-3 text-muted-foreground">
+              <li>
+                <a href="#docs" className="hover:text-brand transition-colors">
+                  Documentation
+                </a>
+              </li>
+              <li>
+                <a href="#blog" className="hover:text-brand transition-colors">
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#support"
+                  className="hover:text-brand transition-colors"
+                >
+                  Support
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#community"
+                  className="hover:text-brand transition-colors"
+                >
+                  Community
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Social */}
+          <div>
+            <h3 className="font-heading font-semibold mb-4">Connect</h3>
+            <div className="flex gap-4">
+              {Object.entries(socialIcons).map(([name, icon]) => (
+                <a
+                  key={name}
+                  href="#"
+                  className="w-10 h-10 bg-surface rounded-full flex items-center justify-center text-muted-foreground hover:text-brand hover:bg-brand/10 transition-all duration-200"
+                  aria-label={name}
+                >
+                  {icon}
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
-        <span className="text-sm text-muted-foreground">
-          Turn your notes into insights.
-        </span>
-      </div>
-      {/* Column 2: Quick Links */}
-      <div>
-        <span className="font-heading font-semibold text-base mb-3 block">
-          Quick Links
-        </span>
-        <ul className="space-y-2">
-          <li>
-            <a href="#features" className="hover:text-accent transition">
-              Features
-            </a>
-          </li>
-          <li>
-            <a href="#pricing" className="hover:text-accent transition">
-              Pricing
-            </a>
-          </li>
-          <li>
-            <a href="#faqs" className="hover:text-accent transition">
-              FAQs
-            </a>
-          </li>
-          <li>
-            <a href="#contact" className="hover:text-accent transition">
-              Contact
-            </a>
-          </li>
-        </ul>
-      </div>
-      {/* Column 3: Resources */}
-      <div>
-        <span className="font-heading font-semibold text-base mb-3 block">
-          Resources
-        </span>
-        <ul className="space-y-2">
-          <li>
-            <a href="#blog" className="hover:text-accent transition">
-              Blog
-            </a>
-          </li>
-          <li>
-            <a href="#docs" className="hover:text-accent transition">
-              Docs
-            </a>
-          </li>
-          <li>
-            <a href="#api" className="hover:text-accent transition">
-              API
-            </a>
-          </li>
-          <li>
-            <a href="#support" className="hover:text-accent transition">
-              Support
-            </a>
-          </li>
-        </ul>
-      </div>
-      {/* Column 4: Socials */}
-      <div>
-        <span className="font-heading font-semibold text-base mb-3 block">
-          Socials
-        </span>
-        <div className="flex gap-4 mt-2">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-brand transition"
-            aria-label="Twitter"
-          >
-            <TwitterIcon />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-brand transition"
-            aria-label="LinkedIn"
-          >
-            <LinkedInIcon />
-          </a>
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-brand transition"
-            aria-label="GitHub"
-          >
-            <GitHubIcon />
-          </a>
+
+        <div className="pt-8 border-t border-white/10 text-center text-muted-foreground">
+          <p>© 2025 QuillInsight. All rights reserved.</p>
         </div>
       </div>
-    </div>
-    <div className="border-t border-muted-foreground/10 pt-6 text-center text-sm text-muted-foreground">
-      © 2025 QuillInsight. All rights reserved.
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 export default FooterSection;

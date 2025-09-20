@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthContext";
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { GoogleIcon } from "@/components/ui/GoogleIcon";

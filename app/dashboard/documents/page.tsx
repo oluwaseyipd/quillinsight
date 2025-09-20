@@ -14,13 +14,24 @@ import {
   AlertCircle,
   CheckCircle2,
   Loader2,
+  Sparkles,
+  ChevronRight,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
 
 type Document = {
   id: string;
@@ -29,6 +40,12 @@ type Document = {
   size: number;
   created_at: string;
   storage_path: string;
+};
+
+type AIResult = {
+  summary?: string;
+  insights?: string;
+  qa?: string;
 };
 
 export default function DocumentsPage() {
@@ -40,6 +57,13 @@ export default function DocumentsPage() {
   const [file, setFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  // AI State
+  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiResult, setAiResult] = useState<AIResult | null>(null);
+  const [qaQuery, setQaQuery] = useState("");
 
   useEffect(() => {
     fetchDocuments();
@@ -232,6 +256,11 @@ export default function DocumentsPage() {
     storagePath: string,
     fileName: string,
   ) => {
+    if (selectedDoc?.id === documentId) {
+      setSelectedDoc(null);
+      setAiResult(null);
+    }
+
     const { error: deleteStorageError } = await supabase.storage
       .from("documents")
       .remove([storagePath]);
@@ -279,6 +308,56 @@ export default function DocumentsPage() {
     setSuccess(`Downloaded "${fileName}"`);
   };
 
+  const handleAiRequest = async (
+    type: "summarize" | "insights" | "qa",
+    query?: string,
+  ) => {
+    if (!selectedDoc) return;
+
+    setAiLoading(true);
+    setAiError(null);
+    setAiResult(null);
+
+    try {
+      const response = await fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          documentPath: selectedDoc.storage_path,
+          type,
+          query,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "AI request failed");
+      }
+
+      const data = await response.json();
+
+      if (type === "summarize") setAiResult({ summary: data.result });
+      if (type === "insights") setAiResult({ insights: data.result });
+      if (type === "qa") setAiResult({ qa: data.result });
+    } catch (err: any) {
+      setAiError(err.message);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handleSelectDoc = (doc: Document) => {
+    if (selectedDoc?.id === doc.id) {
+      setSelectedDoc(null);
+      setAiResult(null);
+    } else {
+      setSelectedDoc(doc);
+      setAiResult(null);
+      setAiError(null);
+      setQaQuery("");
+    }
+  };
+
   return (
     <div className="p-6 bg-background">
       {/* Header */}
@@ -290,7 +369,7 @@ export default function DocumentsPage() {
                 Document Library
               </h1>
               <p className="text-text/70 mt-1">
-                Upload and manage your documents
+                Upload, manage, and analyze your documents with AI
               </p>
             </div>
             <Badge
@@ -304,222 +383,342 @@ export default function DocumentsPage() {
         </div>
       </div>
 
-      <div className="mx-auto py-6 space-y-8">
-        {/* Status Messages */}
-        {error && (
-          <Alert variant="destructive" className="border-red-200 bg-red-50">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+      <div className="mx-auto py-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Upload and Document List */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Status Messages */}
+          {error && (
+            <Alert variant="destructive" className="border-red-200 bg-red-50">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-        {success && (
-          <Alert className="border-green-200 bg-green-50">
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
-            <AlertTitle className="text-green-800">Success</AlertTitle>
-            <AlertDescription className="text-green-700">
-              {success}
-            </AlertDescription>
-          </Alert>
-        )}
+          {success && (
+            <Alert className="border-green-200 bg-green-50">
+              <CheckCircle2 className="h-4 w-4 text-green-600" />
+              <AlertTitle className="text-green-800">Success</AlertTitle>
+              <AlertDescription className="text-green-700">
+                {success}
+              </AlertDescription>
+            </Alert>
+          )}
 
-        {/* Upload Section */}
-        <Card className="border-2 border-dashed border-accent/20 bg-accent/5">
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="text-xl font-heading text-accent">
-              Upload Documents
-            </CardTitle>
-            <p className="text-text/60 text-sm">
-              Drag and drop files or click to browse. Supports PDF, DOCX, and
-              TXT files up to 5MB.
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Drag & Drop Area */}
-            <div
-              className={`relative border-2 border-dashed rounded-lg p-8 transition-all duration-200 ${
-                dragActive
-                  ? "border-accent bg-accent/10"
-                  : "border-accent/30 hover:border-accent/50 hover:bg-accent/5"
-              }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              <div className="text-center space-y-4">
-                <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center">
-                  <Upload className="h-8 w-8 text-accent" />
-                </div>
-
-                <div>
-                  <p className="text-lg font-medium text-text">
-                    Drop files here or click to browse
-                  </p>
-                  <p className="text-sm text-text/60 mt-1">
-                    PDF, DOCX, TXT • Max 5MB per file
-                  </p>
-                </div>
-
-                <Input
-                  type="file"
-                  onChange={handleFileChange}
-                  accept=".pdf,.docx,.txt"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-              </div>
-            </div>
-
-            {/* Selected File Preview */}
-            {file && (
-              <div className="bg-surface rounded-lg p-4 border">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {getFileIcon(file.type)}
-                    <div>
-                      <p className="font-medium text-text">{file.name}</p>
-                      <div className="flex items-center gap-2 text-sm text-text/60">
-                        <Badge variant="outline" className="text-xs">
-                          {getFileTypeLabel(file.type)}
-                        </Badge>
-                        <span>•</span>
-                        <span>{formatFileSize(file.size)}</span>
-                      </div>
-                    </div>
+          {/* Upload Section */}
+          <Card className="border-2 border-dashed border-accent/20 bg-accent/5">
+            <CardHeader className="text-center pb-4">
+              <CardTitle className="text-xl font-heading text-accent">
+                Upload Documents
+              </CardTitle>
+              <p className="text-text/60 text-sm">
+                Drag and drop files or click to browse. Supports PDF, DOCX, and
+                TXT files up to 5MB.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Drag & Drop Area */}
+              <div
+                className={`relative border-2 border-dashed rounded-lg p-8 transition-all duration-200 ${
+                  dragActive
+                    ? "border-accent bg-accent/10"
+                    : "border-accent/30 hover:border-accent/50 hover:bg-accent/5"
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              >
+                <div className="text-center space-y-4">
+                  <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center">
+                    <Upload className="h-8 w-8 text-accent" />
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setFile(null);
-                        setError(null);
-                      }}
-                    >
-                      Remove
-                    </Button>
-                    <Button
-                      onClick={handleUpload}
-                      disabled={uploading}
-                      className="bg-accent hover:bg-accent/90 text-white"
-                    >
-                      {uploading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Uploading...
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="mr-2 h-4 w-4" />
-                          Upload
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-
-                {uploading && uploadProgress > 0 && (
-                  <div className="mt-4">
-                    <Progress value={uploadProgress} className="h-2" />
-                    <p className="text-xs text-text/60 mt-1 text-center">
-                      {uploadProgress}% complete
+                  <div>
+                    <p className="text-lg font-medium text-text">
+                      Drop files here or click to browse
+                    </p>
+                    <p className="text-sm text-text/60 mt-1">
+                      PDF, DOCX, TXT • Max 5MB per file
                     </p>
                   </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
 
-        {/* Documents List */}
-        <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-heading flex items-center gap-2">
-              <HardDrive className="h-5 w-5 text-accent" />
-              My Documents
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {documents.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-                  <FileText className="h-8 w-8 text-accent/60" />
+                  <Input
+                    type="file"
+                    onChange={handleFileChange}
+                    accept=".pdf,.docx,.txt"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
                 </div>
-                <h3 className="text-lg font-medium text-text mb-2">
-                  No documents yet
-                </h3>
-                <p className="text-text/60">
-                  Upload your first document to get started.
-                </p>
               </div>
-            ) : (
-              <div className="space-y-3">
-                {documents.map((doc) => (
-                  <div
-                    key={doc.id}
-                    className="group flex items-center justify-between p-4 bg-surface/50 hover:bg-surface rounded-lg border border-transparent hover:border-accent/20 transition-all duration-200"
-                  >
-                    <div className="flex items-center gap-4 flex-1 min-w-0">
-                      <div className="flex-shrink-0">
-                        {getFileIcon(doc.file_type)}
-                      </div>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="font-medium text-text truncate">
-                            {doc.file_name}
-                          </p>
-                          <Badge
-                            variant="outline"
-                            className="text-xs flex-shrink-0"
-                          >
-                            {getFileTypeLabel(doc.file_type)}
+              {/* Selected File Preview */}
+              {file && (
+                <div className="bg-surface rounded-lg p-4 border">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {getFileIcon(file.type)}
+                      <div>
+                        <p className="font-medium text-text">{file.name}</p>
+                        <div className="flex items-center gap-2 text-sm text-text/60">
+                          <Badge variant="outline" className="text-xs">
+                            {getFileTypeLabel(file.type)}
                           </Badge>
-                        </div>
-
-                        <div className="flex items-center gap-4 text-xs text-text/60">
-                          <div className="flex items-center gap-1">
-                            <HardDrive className="h-3 w-3" />
-                            {formatFileSize(doc.size)}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {formatDate(doc.created_at)}
-                          </div>
+                          <span>•</span>
+                          <span>{formatFileSize(file.size)}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <div className="flex items-center gap-2">
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
-                        onClick={() =>
-                          handleDownload(doc.storage_path, doc.file_name)
-                        }
-                        className="hover:bg-accent/10 hover:text-accent"
+                        onClick={() => {
+                          setFile(null);
+                          setError(null);
+                        }}
                       >
-                        <Download className="h-4 w-4" />
+                        Remove
                       </Button>
                       <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          handleDelete(doc.id, doc.storage_path, doc.file_name)
-                        }
-                        className="hover:bg-red-50 hover:text-red-600"
+                        onClick={handleUpload}
+                        disabled={uploading}
+                        className="bg-accent hover:bg-accent/90 text-white"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        {uploading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="mr-2 h-4 w-4" />
+                            Upload
+                          </>
+                        )}
                       </Button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+
+                  {uploading && uploadProgress > 0 && (
+                    <div className="mt-4">
+                      <Progress value={uploadProgress} className="h-2" />
+                      <p className="text-xs text-text/60 mt-1 text-center">
+                        {uploadProgress}% complete
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Documents List */}
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl font-heading flex items-center gap-2">
+                <HardDrive className="h-5 w-5 text-accent" />
+                My Documents
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {documents.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+                    <FileText className="h-8 w-8 text-accent/60" />
+                  </div>
+                  <h3 className="text-lg font-medium text-text mb-2">
+                    No documents yet
+                  </h3>
+                  <p className="text-text/60">
+                    Upload your first document to get started.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {documents.map((doc) => (
+                    <div
+                      key={doc.id}
+                      className={`group flex items-center justify-between p-4 bg-surface/50 hover:bg-surface rounded-lg border transition-all duration-200 cursor-pointer ${
+                        selectedDoc?.id === doc.id
+                          ? "border-accent/50 bg-accent/5"
+                          : "border-transparent hover:border-accent/20"
+                      }`}
+                      onClick={() => handleSelectDoc(doc)}
+                    >
+                      <div className="flex items-center gap-4 flex-1 min-w-0">
+                        <div className="flex-shrink-0">
+                          {getFileIcon(doc.file_type)}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <p className="font-medium text-text truncate">
+                              {doc.file_name}
+                            </p>
+                            <Badge
+                              variant="outline"
+                              className="text-xs flex-shrink-0"
+                            >
+                              {getFileTypeLabel(doc.file_type)}
+                            </Badge>
+                          </div>
+
+                          <div className="flex items-center gap-4 text-xs text-text/60">
+                            <div className="flex items-center gap-1">
+                              <HardDrive className="h-3 w-3" />
+                              {formatFileSize(doc.size)}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              {formatDate(doc.created_at)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownload(doc.storage_path, doc.file_name);
+                          }}
+                          className="hover:bg-accent/10 hover:text-accent"
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(
+                              doc.id,
+                              doc.storage_path,
+                              doc.file_name,
+                            );
+                          }}
+                          className="hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column: AI Interaction Panel */}
+        <div className="lg:col-span-1">
+          <div className="sticky top-24">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-accent" />
+                  AI Assistant
+                </CardTitle>
+                <CardDescription>
+                  {selectedDoc
+                    ? `Analyzing: ${selectedDoc.file_name}`
+                    : "Select a document to begin"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {!selectedDoc ? (
+                  <div className="text-center py-12">
+                    <p className="text-text/60">
+                      Select a document from the list to generate summaries,
+                      insights, or ask questions.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* AI Actions */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => handleAiRequest("summarize")}
+                        disabled={aiLoading}
+                      >
+                        Summarize
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => handleAiRequest("insights")}
+                        disabled={aiLoading}
+                      >
+                        Key Insights
+                      </Button>
+                    </div>
+
+                    {/* Q&A Section */}
+                    <div className="space-y-2">
+                      <Textarea
+                        placeholder="Ask a question about the document..."
+                        value={qaQuery}
+                        onChange={(e) => setQaQuery(e.target.value)}
+                        disabled={aiLoading}
+                      />
+                      <Button
+                        onClick={() => handleAiRequest("qa", qaQuery)}
+                        disabled={!qaQuery || aiLoading}
+                        className="w-full"
+                      >
+                        Ask Question
+                      </Button>
+                    </div>
+
+                    {/* AI Results */}
+                    <div className="pt-4">
+                      {aiLoading && (
+                        <div className="flex items-center justify-center py-8">
+                          <Loader2 className="h-8 w-8 animate-spin text-accent" />
+                        </div>
+                      )}
+
+                      {aiError && (
+                        <Alert variant="destructive">
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertTitle>AI Error</AlertTitle>
+                          <AlertDescription>{aiError}</AlertDescription>
+                        </Alert>
+                      )}
+
+                      {aiResult && (
+                        <div className="space-y-4">
+                          {aiResult.summary && (
+                            <div className="prose prose-sm dark:prose-invert max-w-none">
+                              <h3>Summary</h3>
+                              <p>{aiResult.summary}</p>
+                            </div>
+                          )}
+                          {aiResult.insights && (
+                            <div className="prose prose-sm dark:prose-invert max-w-none">
+                              <h3>Key Insights</h3>
+                              <p>{aiResult.insights}</p>
+                            </div>
+                          )}
+                          {aiResult.qa && (
+                            <div className="prose prose-sm dark:prose-invert max-w-none">
+                              <h3>Answer</h3>
+                              <p>{aiResult.qa}</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

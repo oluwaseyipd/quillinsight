@@ -21,6 +21,11 @@ import { Button } from "@/components/ui/button";
 import { useCallback } from "react";
 
 const NoteEditor = ({ content, onUpdate }) => {
+  console.log("🔧 NoteEditor - Props received:", {
+    hasContent: !!content,
+    contentLength: content?.length,
+    contentPreview: content?.substring(0, 100),
+  });
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -32,15 +37,54 @@ const NoteEditor = ({ content, onUpdate }) => {
     ],
     content: content,
     onUpdate: ({ editor }) => {
-      onUpdate(editor.getHTML());
+      const newContent = editor.getHTML();
+      const plainText = editor.getText();
+      console.log("🔄 NoteEditor - Content updated:", {
+        htmlLength: newContent.length,
+        plainTextLength: plainText.length,
+        htmlPreview: newContent.substring(0, 100),
+        plainTextPreview: plainText.substring(0, 100),
+        isFromPaste: editor.view.composing,
+        transaction: editor.state.doc.content.size,
+      });
+      onUpdate(newContent);
     },
     editorProps: {
       attributes: {
         class:
           "prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none",
       },
+      handlePaste: (view, event, slice) => {
+        console.log("📋 NoteEditor - Paste event detected:", {
+          clipboardDataLength:
+            event.clipboardData?.getData("text/plain")?.length || 0,
+          clipboardPreview:
+            event.clipboardData?.getData("text/plain")?.substring(0, 100) ||
+            "No text data",
+          sliceSize: slice.content.size,
+        });
+        // Return false to use default paste behavior
+        return false;
+      },
+      handleDrop: (view, event, slice, moved) => {
+        console.log("🎯 NoteEditor - Drop event detected");
+        return false;
+      },
     },
     immediatelyRender: false,
+    onCreate: ({ editor }) => {
+      console.log("📝 NoteEditor - Editor created:", {
+        hasContent: editor.getHTML().length > 0,
+        contentLength: editor.getHTML().length,
+      });
+    },
+    onSelectionUpdate: ({ editor }) => {
+      console.log("👆 NoteEditor - Selection changed:", {
+        from: editor.state.selection.from,
+        to: editor.state.selection.to,
+        currentContent: editor.getHTML().length,
+      });
+    },
   });
 
   const setLink = useCallback(() => {
