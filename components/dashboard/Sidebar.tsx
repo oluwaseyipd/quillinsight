@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
@@ -12,6 +13,7 @@ import {
   Tag,
   PlusCircle,
   LogOut,
+  FileText,
   User,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -20,13 +22,14 @@ import { createClient } from "@/lib/supabase/client";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Home", href: "/dashboard" },
+  { icon: FileText, label: "Documents", href: "/dashboard/documents" },
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ];
 
 export default function Sidebar({ setSelectedFolder, setSelectedTag }) {
   const supabase = createClient();
+  const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeItem, setActiveItem] = useState("/dashboard");
   const [folders, setFolders] = useState<any[]>([]);
   const [tags, setTags] = useState<any[]>([]);
   const [newFolderName, setNewFolderName] = useState("");
@@ -212,31 +215,29 @@ export default function Sidebar({ setSelectedFolder, setSelectedTag }) {
             >
               <a
                 href={item.href}
-                onClick={() => setActiveItem(item.href)}
                 className={`
                   group flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 relative overflow-hidden
                   ${
-                    activeItem === item.href
-                      ? "text-white shadow-md transform scale-[1.02]"
-                      : "hover:shadow-sm hover:transform hover:scale-[1.01]"
+                    pathname === item.href
+                      ? "text-white shadow-lg transform scale-[1.02]"
+                      : "hover:bg-opacity-80 hover:transform hover:scale-[1.01]"
                   }
                 `}
                 style={{
                   backgroundColor:
-                    activeItem === item.href
+                    pathname === item.href
                       ? "var(--color-accent)"
                       : "transparent",
-                  color:
-                    activeItem === item.href ? "white" : "var(--color-text)",
+                  color: pathname === item.href ? "white" : "var(--color-text)",
                 }}
                 onMouseEnter={(e) => {
-                  if (activeItem !== item.href) {
+                  if (pathname !== item.href) {
                     e.currentTarget.style.backgroundColor =
-                      "rgba(107, 77, 230, 0.1)";
+                      "rgba(var(--color-accent-rgb, 107, 77, 230), 0.1)";
                   }
                 }}
                 onMouseLeave={(e) => {
-                  if (activeItem !== item.href) {
+                  if (pathname !== item.href) {
                     e.currentTarget.style.backgroundColor = "transparent";
                   }
                 }}
