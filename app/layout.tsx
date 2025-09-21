@@ -7,6 +7,14 @@ import { AuthProvider } from "@/context/AuthContext";
 export const metadata: Metadata = {
   title: "QuillInsight",
   description: "AI-powered insights for your writing",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/images/favicon.png", type: "image/png", sizes: "16x16" },
+    ],
+    apple: "/images/favicon.png",
+    shortcut: "/images/favicon.png",
+  },
 };
 
 export default function RootLayout({

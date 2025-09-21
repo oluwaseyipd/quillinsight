@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
-import { Feather } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -23,14 +23,15 @@ const Header = () => {
       transition={{ duration: 0.6 }}
       className="relative z-50 w-full px-6 py-6 flex items-center justify-between backdrop-blur-xl bg-background/80 border-b border-white/10"
     >
-      <Link href="/" className="flex items-center gap-3">
-        <div className="relative">
-          <Feather className="text-brand h-8 w-8" />
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse" />
-        </div>
-        <span className="font-heading text-2xl font-bold tracking-tight text-brand">
-          QuillInsight
-        </span>
+      <Link href="/" className="flex items-center">
+        <Image
+          src="/images/logo.png"
+          alt="QuillInsight"
+          width={180}
+          height={40}
+          className="w-auto md:w-[180px]"
+          priority
+        />
       </Link>
 
       <nav className="hidden md:flex gap-2 items-center text-base font-medium">

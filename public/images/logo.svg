@@ -1,0 +1,24 @@
+<svg width="180" height="40" viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Quill Icon -->
+  <g transform="translate(8, 8)">
+    <!-- Feather/Quill shape -->
+    <path d="M2 20C2 20 4 16 8 14C12 12 16 10 20 8C22 7 24 6 24 6C24 6 22 8 20 10C18 12 16 14 14 16C12 18 10 20 8 22C6 24 4 26 2 28C2 28 2 24 2 20Z" fill="#3B82F6"/>
+
+    <!-- Quill details -->
+    <path d="M8 14C10 13 12 12 14 11C16 10 18 9 20 8" stroke="#1E40AF" stroke-width="0.5" fill="none"/>
+    <path d="M10 16C12 15 14 14 16 13C18 12 20 11 22 10" stroke="#1E40AF" stroke-width="0.5" fill="none"/>
+    <path d="M12 18C14 17 16 16 18 15C20 14 22 13 24 12" stroke="#1E40AF" stroke-width="0.5" fill="none"/>
+
+    <!-- Ink pot/bulb at bottom -->
+    <ellipse cx="6" cy="22" rx="3" ry="4" fill="#6366F1"/>
+    <ellipse cx="6" cy="21" rx="2" ry="2.5" fill="#8B5CF6"/>
+
+    <!-- Small highlight -->
+    <ellipse cx="7" cy="20" rx="0.8" ry="1" fill="#A78BFA" opacity="0.7"/>
+  </g>
+
+  <!-- Text "QuillInsight" -->
+  <text x="48" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#1F2937">
+    QuillInsight
+  </text>
+</svg>

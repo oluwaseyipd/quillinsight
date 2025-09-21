@@ -99,9 +99,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen relative overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen relative overflow-hidden bg-background">
       {/* Enhanced background with gradient and animated elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-green-50/30 to-emerald-100/50"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-surface/30 to-background" />
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -115,7 +115,7 @@ export default function RegisterPage() {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-green-400/10 to-emerald-600/10 rounded-full blur-3xl"
+          className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-brand/10 to-accent/10 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -127,7 +127,7 @@ export default function RegisterPage() {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-teal-600/10 rounded-full blur-3xl"
+          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-accent/10 to-brand/10 rounded-full blur-3xl"
         />
       </div>
 
@@ -141,23 +141,26 @@ export default function RegisterPage() {
         className="w-full max-w-md relative z-10"
       >
         {/* Enhanced card with better shadows and backdrop blur */}
-        <Card className="space-y-8 bg-white/70 backdrop-blur-xl border-0 shadow-2xl shadow-slate-200/50 rounded-3xl p-8">
+        <Card className="space-y-8 bg-surface/70 backdrop-blur-xl border-0 shadow-2xl shadow-brand/10 rounded-3xl p-8">
           {/* Brand section with improved typography */}
           <div className="flex flex-col items-center gap-3">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-700 rounded-2xl flex items-center justify-center mb-2 shadow-lg shadow-green-200/50"
             >
-              <span className="text-2xl font-bold text-white">Q</span>
+              <img
+                src="/images/logo.png"
+                alt="QuillInsight Logo"
+                className="h-1/2 w-auto"
+              />
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent"
+              className="text-3xl font-bold bg-gradient-to-r from-text to-text/80 bg-clip-text text-transparent"
             >
               Create Account
             </motion.h1>
@@ -166,7 +169,7 @@ export default function RegisterPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="text-slate-600 text-center text-base font-medium"
+              className="text-text/70 text-center text-base font-medium"
             >
               Join QuillInsight and start your journey
             </motion.p>
@@ -190,10 +193,10 @@ export default function RegisterPage() {
             <Button
               type="button"
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 bg-white/90 backdrop-blur-sm border border-slate-200/50 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 py-3 font-semibold text-slate-700 rounded-2xl group relative overflow-hidden"
+              className="w-full flex items-center justify-center gap-3 bg-surface/90 backdrop-blur-sm border border-text/20 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 py-3 font-semibold text-text rounded-2xl group relative overflow-hidden"
               disabled={loading}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
               <GoogleIcon width={20} height={20} />
               <span>Continue with Google</span>
             </Button>
@@ -218,7 +221,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <label
                 htmlFor="fullName"
-                className="block text-sm font-semibold text-foreground mb-2"
+                className="block text-sm font-semibold text-text mb-2"
               >
                 Full Name
               </label>
@@ -231,13 +234,13 @@ export default function RegisterPage() {
                 onChange={(e) => setFullName(e.target.value)}
                 required
                 disabled={loading}
-                className="w-full px-4 py-3 rounded-xl border border-muted-foreground/30 bg-card/60 backdrop-blur-sm focus:bg-card focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 placeholder:text-muted-foreground"
+                className="w-full px-4 py-3 rounded-xl border border-text/20 bg-surface/50 backdrop-blur-sm focus:bg-surface focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all duration-200 placeholder:text-text/50"
               />
             </div>
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="block text-sm font-semibold text-foreground mb-2"
+                className="block text-sm font-semibold text-text mb-2"
               >
                 Email Address
               </label>
@@ -250,14 +253,14 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
-                className="w-full px-4 py-3 rounded-xl border border-muted-foreground/30 bg-card/60 backdrop-blur-sm focus:bg-card focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 placeholder:text-muted-foreground"
+                className="w-full px-4 py-3 rounded-xl border border-text/20 bg-surface/50 backdrop-blur-sm focus:bg-surface focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all duration-200 placeholder:text-text/50"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold text-slate-700 mb-2"
+                className="block text-sm font-semibold text-text mb-2"
               >
                 Password
               </label>
@@ -271,12 +274,12 @@ export default function RegisterPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={loading}
-                  className="w-full px-4 py-3 rounded-xl border border-muted-foreground/30 bg-card/60 backdrop-blur-sm focus:bg-card focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 placeholder:text-muted-foreground pr-10"
+                  className="w-full px-4 py-3 rounded-xl border border-text/20 bg-surface/50 backdrop-blur-sm focus:bg-surface focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all duration-200 placeholder:text-text/50 pr-10"
                 />
                 <button
                   type="button"
                   tabIndex={-1}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text/50 hover:text-text"
                   onClick={() => setShowPassword((prev) => !prev)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   disabled={loading}
@@ -319,7 +322,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-semibold text-slate-700 mb-2"
+                className="block text-sm font-semibold text-text mb-2"
               >
                 Confirm Password
               </label>
@@ -333,12 +336,12 @@ export default function RegisterPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   disabled={loading}
-                  className="w-full px-4 py-3 rounded-xl border border-muted-foreground/30 bg-card/60 backdrop-blur-sm focus:bg-card focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 placeholder:text-muted-foreground pr-10"
+                  className="w-full px-4 py-3 rounded-xl border border-text/20 bg-surface/50 backdrop-blur-sm focus:bg-surface focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all duration-200 placeholder:text-text/50 pr-10"
                 />
                 <button
                   type="button"
                   tabIndex={-1}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text/50 hover:text-text"
                   onClick={() => setShowPassword((prev) => !prev)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   disabled={loading}
@@ -383,22 +386,22 @@ export default function RegisterPage() {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
-                className="text-xs text-slate-600 bg-slate-50/80 rounded-lg p-3"
+                className="text-xs text-text/70 bg-surface/80 rounded-lg p-3"
               >
                 <div className="space-y-1">
                   <div
-                    className={`flex items-center gap-2 ${password.length >= 6 ? "text-green-600" : "text-slate-400"}`}
+                    className={`flex items-center gap-2 ${password.length >= 6 ? "text-green-600" : "text-text/50"}`}
                   >
                     <div
-                      className={`w-1 h-1 rounded-full ${password.length >= 6 ? "bg-green-500" : "bg-slate-300"}`}
+                      className={`w-1 h-1 rounded-full ${password.length >= 6 ? "bg-green-500" : "bg-text/30"}`}
                     ></div>
                     At least 6 characters
                   </div>
                   <div
-                    className={`flex items-center gap-2 ${password !== confirmPassword || !confirmPassword ? "text-slate-400" : password === confirmPassword ? "text-green-600" : "text-red-500"}`}
+                    className={`flex items-center gap-2 ${password !== confirmPassword || !confirmPassword ? "text-text/50" : password === confirmPassword ? "text-green-600" : "text-red-500"}`}
                   >
                     <div
-                      className={`w-1 h-1 rounded-full ${password !== confirmPassword || !confirmPassword ? "bg-slate-300" : password === confirmPassword ? "bg-green-500" : "bg-red-500"}`}
+                      className={`w-1 h-1 rounded-full ${password !== confirmPassword || !confirmPassword ? "bg-text/30" : password === confirmPassword ? "bg-green-500" : "bg-red-500"}`}
                     ></div>
                     Passwords match
                   </div>
@@ -409,10 +412,10 @@ export default function RegisterPage() {
             {/* Enhanced submit button */}
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white font-semibold py-3 rounded-xl shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 relative overflow-hidden group"
+              className="w-full bg-gradient-to-r from-brand to-accent hover:from-brand-dark hover:to-accent-dark text-white font-semibold py-3 rounded-xl shadow-lg shadow-brand/25 hover:shadow-xl hover:shadow-brand/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 relative overflow-hidden group"
               disabled={loading}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative z-10">
                 {loading ? (
                   <div className="flex items-center justify-center gap-2">
@@ -433,11 +436,11 @@ export default function RegisterPage() {
             transition={{ delay: 0.9, duration: 0.5 }}
             className="flex justify-center items-center text-sm pt-2"
           >
-            <span className="text-slate-600">
+            <span className="text-text/70">
               Already have an account?{" "}
               <a
                 href="/auth/login"
-                className="text-green-600 hover:text-green-700 font-semibold hover:underline transition-colors duration-200"
+                className="text-brand hover:text-brand-dark font-semibold hover:underline transition-colors duration-200"
               >
                 Sign In
               </a>
@@ -449,14 +452,14 @@ export default function RegisterPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0, duration: 0.5 }}
-            className="text-center text-xs text-slate-500 leading-relaxed"
+            className="text-center text-xs text-text/50 leading-relaxed"
           >
             By creating an account, you agree to our{" "}
-            <a href="/terms" className="text-green-600 hover:underline">
+            <a href="/terms" className="text-brand hover:underline">
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="/privacy" className="text-green-600 hover:underline">
+            <a href="/privacy" className="text-brand hover:underline">
               Privacy Policy
             </a>
           </motion.div>
