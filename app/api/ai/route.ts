@@ -101,9 +101,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ result: aiText });
   } catch (error) {
     console.error("AI API Error - Full details:", {
-      message: error.message,
-      stack: error.stack,
-      name: error.name,
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined,
     });
     return NextResponse.json(
       { error: "Failed to get response from AI", details: error.message },
