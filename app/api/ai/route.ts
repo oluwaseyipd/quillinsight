@@ -102,11 +102,14 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("AI API Error - Full details:", {
       message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
       name: error instanceof Error ? error.name : undefined,
     });
+    /**
+     * errorMessage - Ensures the error message is always a string, satisfying TypeScript's type requirements.
+     */
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to get response from AI", details: error.message },
+      { error: "Failed to get response from AI", details: errorMessage },
       { status: 500 },
     );
   }
