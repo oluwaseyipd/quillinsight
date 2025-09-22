@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { GoogleIcon } from "@/components/ui/GoogleIcon";
 import { Divider } from "@/components/ui/Divider";
 import { Alert } from "@/components/ui/Alert";

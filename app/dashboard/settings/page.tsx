@@ -58,12 +58,12 @@ const SettingsPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row h-full bg-background">
-      {/* Sidebar Navigation */}\n{" "}
+      {/* Sidebar Navigation */}{" "}
       <SettingsSidebar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
-      {/* Main Content Area */}\n{" "}
+      {/* Main Content Area */}{" "}
       <div className="flex-1 p-4 md:p-8 overflow-y-auto">
         <SettingsSection
           activeSection={activeSection}
