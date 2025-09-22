@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-import { Alert } from "@/components/ui/Alert";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -26,7 +26,7 @@ export default function UpdatePasswordPage() {
         if (event === "SIGNED_OUT") {
           router.push("/auth/login");
         }
-      }
+      },
     );
 
     return () => {
@@ -156,11 +156,12 @@ export default function UpdatePasswordPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            {showAlert && (error ? (
-              <Alert message={error} type="error" show={showAlert} />
-            ) : (
-              <Alert message={message} type="success" show={showAlert} />
-            ))}
+            {showAlert &&
+              (error ? (
+                <Alert message={error} type="error" show={showAlert} />
+              ) : (
+                <Alert message={message} type="success" show={showAlert} />
+              ))}
           </motion.div>
 
           <motion.form
