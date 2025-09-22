@@ -58,12 +58,13 @@ const SettingsPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row h-full bg-background">
-      {/* Sidebar Navigation */}\n      <SettingsSidebar
+      {/* Sidebar Navigation */}\n{" "}
+      <SettingsSidebar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
-
-      {/* Main Content Area */}\n      <div className="flex-1 p-4 md:p-8 overflow-y-auto">
+      {/* Main Content Area */}\n{" "}
+      <div className="flex-1 p-4 md:p-8 overflow-y-auto">
         <SettingsSection
           activeSection={activeSection}
           activeTheme={activeTheme}
@@ -84,4 +85,30 @@ type Section =
   | "notifications"
   | "localization"
   | "general";
+
+import {
+  User,
+  Palette,
+  Shield,
+  FileText,
+  Bell,
+  Globe,
+  Settings,
+  LogOut,
+  Trash2,
+  Key,
+  EyeOff,
+  CheckCircle,
+  XCircle,
+  UploadCloud,
+  Monitor,
+  List,
+  Grid,
+  Calendar,
+  Clock,
+  Type,
+  Mail,
+  BellRing,
+  Volume2,
+  Text,
 } from "lucide-react";
