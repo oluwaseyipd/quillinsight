@@ -1,6 +1,6 @@
 "use client";
 import { Bell, User, Sun, Moon, Palette } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
