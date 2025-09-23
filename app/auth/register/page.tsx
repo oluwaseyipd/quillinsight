@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { GoogleIcon } from "@/components/ui/GoogleIcon";
 import { Divider } from "@/components/ui/Divider";
-import { Alert } from "@/components/ui/Alert";
+import { Alert } from "@/components/ui/LegacyAlert";
 import { motion } from "framer-motion";
 
 export default function RegisterPage() {

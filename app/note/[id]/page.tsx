@@ -39,7 +39,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
+import { Alert } from "@/components/ui/LegacyAlert";
 import {
   Select,
   SelectContent,

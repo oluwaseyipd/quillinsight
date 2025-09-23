@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { GoogleIcon } from "@/components/ui/GoogleIcon";
 import { Divider } from "@/components/ui/Divider";
-import { Alert } from "@/components/ui/Alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
 import { motion } from "framer-motion";
 
 export default function LoginPage() {
@@ -146,7 +146,12 @@ export default function LoginPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <Alert message={error} type="error" show={showError} />
+            {showError && (
+              <Alert variant="destructive">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
           </motion.div>
 
           {/* Enhanced Google button */}
