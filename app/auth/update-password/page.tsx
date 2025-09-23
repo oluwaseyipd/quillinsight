@@ -6,9 +6,9 @@ import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Alert } from "@/components/ui/LegacyAlert";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function UpdatePasswordPage() {
   const [password, setPassword] = useState("");
