@@ -74,15 +74,15 @@ Build the main dashboard workspace where users organize, write, and manage their
 ### Phase 4: AI Capabilities Integration
 Implement the OpenAI-driven capabilities that summarize, tag, and highlight notes.
 
-- [ ] **4.1 Next.js AI API Routes**
-  - Create secure server-side API endpoints (`/api/ai/summarize`, `/api/ai/tags`, `/api/ai/highlights`) with prompt guidelines.
-  - Restrict access to authenticated sessions (or rate-limit for anonymous mode).
-- [ ] **4.2 AI Insight Panels**
+- [x] **4.1 Next.js AI API Routes**
+  - Create secure server-side API endpoint (`/api/ai/analyze`) with prompt guidelines.
+  - Restrict access to authenticated sessions.
+- [x] **4.2 AI Insight Panels**
   - Implement a collapsible side-drawer or tabbed panel in the editor to showcase AI results.
   - **Auto-Summarize:** Displays a concise summary of the note text.
   - **Auto-Tagging:** Lists AI-suggested tags with buttons to instantly add them to the note.
   - **Highlights Panel:** Extracts bullet points, tasks, or key takeaways.
-- [ ] **4.3 Toggle Raw/Enhanced View**
+- [x] **4.3 Toggle Raw/Enhanced View**
   - User toggle to display the raw note text or a formatted, AI-enhanced reader view.
 
 ---
