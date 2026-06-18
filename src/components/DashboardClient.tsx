@@ -64,6 +64,10 @@ export default function DashboardClient({
   // Theme preference initialization
   const [activeTheme, setActiveTheme] = useState(initialProfile.theme_preference || 'theme-classic-light')
 
+  // Username edit states
+  const [editUsername, setEditUsername] = useState(initialProfile.username || '')
+  const [usernameStatus, setUsernameStatus] = useState({ type: '', text: '' })
+
   useEffect(() => {
     const localTheme = localStorage.getItem('quillinsight-theme') || activeTheme
     setActiveTheme(localTheme)
@@ -79,6 +83,33 @@ export default function DashboardClient({
     const supabase = createClient()
     await supabase.from('profiles').update({ theme_preference: newTheme }).eq('id', profile.id)
     setProfile((p) => ({ ...p, theme_preference: newTheme }))
+  }
+
+  const handleUpdateUsername = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setUsernameStatus({ type: '', text: '' })
+
+    if (editUsername.trim().length < 3) {
+      setUsernameStatus({ type: 'error', text: 'Username must be at least 3 characters long.' })
+      return
+    }
+
+    try {
+      const supabase = createClient()
+      const { error } = await supabase
+        .from('profiles')
+        .update({ username: editUsername.trim() })
+        .eq('id', profile.id)
+
+      if (error) {
+        setUsernameStatus({ type: 'error', text: error.message })
+      } else {
+        setUsernameStatus({ type: 'success', text: 'Profile username updated successfully!' })
+        setProfile((p) => ({ ...p, username: editUsername.trim() }))
+      }
+    } catch (err: any) {
+      setUsernameStatus({ type: 'error', text: err?.message || 'An error occurred.' })
+    }
   }
 
   // Handle Client Sign Out
@@ -325,15 +356,69 @@ export default function DashboardClient({
           />
         </div>
       ) : (
-        /* Settings (Personalization Workspace) stub - Linked to Phase 5 themes switcher */
+        /* Settings (Personalization & Account Workspace) */
         <div className="flex-1 flex flex-col p-8 overflow-y-auto bg-bg-app">
-          <div className="max-w-xl mx-auto w-full">
-            <h1 className="text-2xl font-bold flex items-center gap-2 border-b border-border-app pb-4 mb-6">
+          <div className="max-w-xl mx-auto w-full flex flex-col gap-6">
+            <h1 className="text-2xl font-bold flex items-center gap-2 border-b border-border-app pb-4">
               <Palette className="text-electric-blue" />
-              <span>Personalize Workspace</span>
+              <span>Workspace Settings</span>
             </h1>
 
-            <div className="flex flex-col gap-6 bg-card-app p-6 rounded-2xl border border-border-app text-card-text">
+            {/* Account Details & Username Update Card */}
+            <div className="bg-card-app p-6 rounded-2xl border border-border-app text-card-text">
+              <h3 className="text-sm font-extrabold mb-1">Account & Profile</h3>
+              <p className="text-xs opacity-75 mb-4 leading-relaxed">
+                Review your registered account email and modify your profile username.
+              </p>
+
+              {usernameStatus.text && (
+                <div
+                  className={`p-3 rounded-xl text-xs mb-4 border ${
+                    usernameStatus.type === 'error'
+                      ? 'bg-error-red/10 border-error-red text-error-red'
+                      : 'bg-success-green/10 border-success-green text-success-green'
+                  }`}
+                >
+                  {usernameStatus.text}
+                </div>
+              )}
+
+              <form onSubmit={handleUpdateUsername} className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-extrabold uppercase tracking-wider opacity-75">
+                    Email Address
+                  </label>
+                  <div className="w-full px-4 py-2.5 rounded-xl border border-border-app bg-bg-app/40 text-text-app/60 text-xs font-semibold font-mono select-all">
+                    {userEmail}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-extrabold uppercase tracking-wider opacity-75" htmlFor="edit-username">
+                    Profile Username
+                  </label>
+                  <input
+                    id="edit-username"
+                    type="text"
+                    required
+                    placeholder="Username"
+                    value={editUsername}
+                    onChange={(e) => setEditUsername(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-border-app bg-bg-app text-text-app outline-none focus:border-electric-blue transition-colors text-xs"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="px-4 py-2.5 rounded-xl bg-electric-blue hover:bg-blue-600 text-white font-semibold transition-all shadow-sm cursor-pointer text-xs border-none w-max"
+                >
+                  Update Username
+                </button>
+              </form>
+            </div>
+
+            {/* Themes Selection Card */}
+            <div className="bg-card-app p-6 rounded-2xl border border-border-app text-card-text">
               <div>
                 <h3 className="text-sm font-extrabold mb-1">Select Custom Theme</h3>
                 <p className="text-xs opacity-75 mb-4 leading-relaxed">
@@ -343,25 +428,25 @@ export default function DashboardClient({
                 {/* Grid list of 5 themes */}
                 <div className="flex flex-col gap-3">
                   {[
-                    { id: 'theme-classic-light', name: 'Classic Light', bg: 'bg-[#F8FAFC]', text: 'text-[#0F172A]', primary: '#3B82F6' },
-                    { id: 'theme-professional-dark', name: 'Professional Dark', bg: 'bg-[#0F172A]', text: 'text-[#F8FAFC]', primary: '#3B82F6' },
-                    { id: 'theme-modern-purple', name: 'Modern Purple', bg: 'bg-[#1E1B4B]', text: 'text-[#EDE9FE]', primary: '#8B5CF6' },
-                    { id: 'theme-eco-green', name: 'Eco Green', bg: 'bg-[#ECFDF5]', text: 'text-[#064E3B]', primary: '#22C55E' },
-                    { id: 'theme-minimal-gray', name: 'Minimal Gray', bg: 'bg-[#F1F5F9]', text: 'text-[#1E293B]', primary: '#3B82F6' },
+                    { id: 'theme-classic-light', name: 'Classic Light', bg: 'bg-[#F8FAFC]', text: 'text-[#0F172A]' },
+                    { id: 'theme-professional-dark', name: 'Professional Dark', bg: 'bg-[#0F172A]', text: 'text-[#F8FAFC]' },
+                    { id: 'theme-modern-purple', name: 'Modern Purple', bg: 'bg-[#1E1B4B]', text: 'text-[#EDE9FE]' },
+                    { id: 'theme-eco-green', name: 'Eco Green', bg: 'bg-[#ECFDF5]', text: 'text-[#064E3B]' },
+                    { id: 'theme-minimal-gray', name: 'Minimal Gray', bg: 'bg-[#F1F5F9]', text: 'text-[#1E293B]' },
                   ].map((t) => {
                     const isSelected = activeTheme === t.id
                     return (
                       <button
                         key={t.id}
                         onClick={() => handleThemeChange(t.id)}
-                        className={`w-full flex items-center justify-between p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
+                        className={`w-full flex items-center justify-between p-3.5 rounded-xl border text-left cursor-pointer transition-all border-none ${
                           isSelected
                             ? 'border-electric-blue bg-bg-app/80 shadow-md'
                             : 'border-border-app bg-bg-app/40 hover:bg-bg-app/70'
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <span className={`w-8 h-8 rounded-lg ${t.bg} border border-border-app flex items-center justify-center font-bold text-xs shrink-0 ${t.text}`}>
+                          <span className={`w-8 h-8 rounded-lg ${t.bg} border border-border-app/40 flex items-center justify-center font-bold text-xs shrink-0 ${t.text}`}>
                             A
                           </span>
                           <span className="text-xs font-semibold">{t.name}</span>

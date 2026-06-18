@@ -90,7 +90,7 @@ Implement the OpenAI-driven capabilities that summarize, tag, and highlight note
 ### Phase 5: Personalization & Custom Themes
 Add customizable visuals and dashboard options.
 
-- [ ] **5.1 Multi-Theme Engine**
+- [x] **5.1 Multi-Theme Engine**
   - Configure class-based theme switcher applying global CSS variables.
   - Support the 5 specified dashboard themes:
     1. **Classic Light** (F8FAFC / 0F172A / 3B82F6)
@@ -98,10 +98,10 @@ Add customizable visuals and dashboard options.
     3. **Modern Purple** (1E1B4B / EDE9FE / 8B5CF6)
     4. **Eco Green** (ECFDF5 / 064E3B / 22C55E)
     5. **Minimal Gray** (F1F5F9 / 1E293B / 3B82F6)
-- [ ] **5.2 Settings Panel**
-  - Account info, security actions.
+- [x] **5.2 Settings Panel**
+  - Account info, profile username editing.
   - Personalization section to toggle dashboard themes (preview and apply instantly).
-  - Persistent user preference saved in profile metadata.
+  - Persistent user preference saved in profiles table.
 
 ---
 
