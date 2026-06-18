@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Folder, Tag, Settings, LogOut, Plus, Trash2, Edit2, Check, X, FileText, ChevronLeft, ChevronRight } from 'lucide-react'
+import ConfirmationModal from './ConfirmationModal'
 
 interface SidebarProps {
   folders: Array<{ id: string; name: string }>
@@ -39,6 +40,7 @@ export default function Sidebar({
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null)
   const [editFolderName, setEditFolderName] = useState('')
+  const [folderToDelete, setFolderToDelete] = useState<{ id: string; name: string } | null>(null)
 
   const handleCreateFolderSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -218,9 +220,7 @@ export default function Sidebar({
                       <span
                         onClick={(e) => {
                           e.stopPropagation()
-                          if (confirm(`Are you sure you want to delete folder "${folder.name}"?`)) {
-                            onDeleteFolder(folder.id)
-                          }
+                          setFolderToDelete({ id: folder.id, name: folder.name })
                         }}
                         className="p-1 rounded hover:bg-red-500/10 text-red-500/80 hover:text-red-500 cursor-pointer"
                         title="Delete"
@@ -297,6 +297,22 @@ export default function Sidebar({
           {!collapsed && <span>Sign Out</span>}
         </button>
       </div>
+
+      <ConfirmationModal
+        isOpen={folderToDelete !== null}
+        title="Delete Folder"
+        message={`Are you sure you want to delete folder "${folderToDelete?.name}"? All notes inside this folder will be unassigned.`}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={async () => {
+          if (folderToDelete) {
+            await onDeleteFolder(folderToDelete.id)
+            setFolderToDelete(null)
+          }
+        }}
+        onCancel={() => setFolderToDelete(null)}
+        isDanger={true}
+      />
     </div>
   )
 }

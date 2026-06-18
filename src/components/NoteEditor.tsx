@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Trash2, Copy, FolderInput, Tag, Sparkles, X, Check, FileText, Edit } from 'lucide-react'
+import ConfirmationModal from './ConfirmationModal'
 
 interface Note {
   id: string
@@ -44,6 +45,7 @@ export default function NoteEditor({
 
   // Mode states
   const [readerMode, setReaderMode] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   // Sync state with active note selection changes
   useEffect(() => {
@@ -54,6 +56,7 @@ export default function NoteEditor({
       setAiError('')
       setSuggestedTags([])
       setReaderMode(false)
+      setShowDeleteConfirm(false)
     }
   }, [note?.id])
 
@@ -246,11 +249,7 @@ export default function NoteEditor({
 
           {/* Delete note */}
           <button
-            onClick={() => {
-              if (confirm('Are you sure you want to delete this note?')) {
-                onDeleteNote(note.id)
-              }
-            }}
+            onClick={() => setShowDeleteConfirm(true)}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-error-red bg-card-app text-error-red hover:bg-error-red/5 text-xs font-semibold cursor-pointer"
             title="Delete Note"
           >
@@ -464,6 +463,20 @@ export default function NoteEditor({
           </div>
         )}
       </div>
+
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        title="Delete Note"
+        message={`Are you sure you want to delete the note "${note.title || 'Untitled'}"? This action cannot be undone.`}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={async () => {
+          await onDeleteNote(note.id)
+          setShowDeleteConfirm(false)
+        }}
+        onCancel={() => setShowDeleteConfirm(false)}
+        isDanger={true}
+      />
     </div>
   )
 }
