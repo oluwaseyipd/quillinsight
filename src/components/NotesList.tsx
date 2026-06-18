@@ -155,7 +155,7 @@ export default function NotesList({
                 </p>
 
                 <div className="flex items-center justify-between text-[9px] font-bold opacity-60 border-t border-border-app/20 pt-2">
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-1" suppressHydrationWarning>
                     <Calendar size={10} />
                     {formatDate(note.updated_at)}
                   </span>
