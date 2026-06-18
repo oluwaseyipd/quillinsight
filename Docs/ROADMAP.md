@@ -58,13 +58,13 @@ Develop the welcoming entrance, user login flows, and the interactive anonymous 
 ### Phase 3: Dashboard & Core Notes Management
 Build the main dashboard workspace where users organize, write, and manage their notes.
 
-- [ ] **3.1 Layout & Sidebar Navigation**
+- [x] **3.1 Layout & Sidebar Navigation**
   - Responsive layout with collapsible sidebar.
   - Navigation tree for folders, list of tags, settings, and profile details.
-- [ ] **3.2 Folders & Tags CRUD**
+- [x] **3.2 Folders & Tags CRUD**
   - Create, rename, and delete folders.
   - Inline tag management and filtering by tags.
-- [ ] **3.3 Notes Workspace & Editor**
+- [x] **3.3 Notes Workspace & Editor**
   - Rich text or markdown note editor with auto-save capability.
   - Note list with search input, sorting options (date modified, title), and filters.
   - Action buttons to delete, move to folder, or clone notes.
