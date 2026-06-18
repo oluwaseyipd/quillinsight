@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server'
 import OpenAI from 'openai'
 
 export async function POST(request: Request) {
+  let content = ''
   try {
     // 1. Authenticate user
     const supabase = await createClient()
@@ -16,7 +17,8 @@ export async function POST(request: Request) {
     }
 
     // 2. Validate request content
-    const { content } = await request.json()
+    const body = await request.json()
+    content = body.content || ''
     if (!content || typeof content !== 'string' || content.trim().length === 0) {
       return NextResponse.json(
         { error: 'Note content is required for AI analysis.' },
@@ -72,6 +74,31 @@ Ensure the response is strictly valid JSON matching the schema format.
 
   } catch (error: any) {
     console.error('AI Analysis API Error:', error)
+
+    const isQuotaError = error?.status === 429 || error?.code === 'insufficient_quota' || error?.message?.includes('quota')
+    const isAuthError = error?.status === 401 || error?.code === 'invalid_api_key' || error?.message?.includes('API key')
+
+    if (isQuotaError || isAuthError) {
+      const wordCount = content.trim().split(/\s+/).length
+      const titleLine = content.trim().split('\n')[0].replace(/[#*`]/g, '').trim()
+      
+      const errorContext = isQuotaError 
+        ? "OpenAI Quota Exceeded (429). Check your billing details."
+        : "OpenAI Auth Failed (401). Invalid API key in .env.local."
+
+      const summaryText = `[Mock Mode - ${errorContext}] This note details "${titleLine || 'Untitled Topic'}" containing ${wordCount} words.`
+
+      return NextResponse.json({
+        summary: summaryText,
+        tags: ['fallback', 'mock-ai', 'openai-limit'],
+        takeaways: [
+          'AI fallback dashboard summary activated due to OpenAI API restrictions.',
+          'Click tag buttons below to verify automatic folder and note tag assignments.',
+          'Run a query on /api/diagnostics to test the exact status of your API key configurations.'
+        ]
+      })
+    }
+
     return NextResponse.json(
       { error: error?.message || 'An internal server error occurred.' },
       { status: 500 }
