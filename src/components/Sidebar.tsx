@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Folder, Tag, Settings, LogOut, Plus, Trash2, Edit2, Check, X, FileText, ChevronLeft, ChevronRight } from 'lucide-react'
+import Image from 'next/image'
 import ConfirmationModal from './ConfirmationModal'
 
 interface SidebarProps {
@@ -14,7 +15,7 @@ interface SidebarProps {
   tags: Array<{ name: string; count: number }>
   activeTag: string | null
   setActiveTag: (tag: string | null) => void
-  profile: { username: string | null; avatar_url: string | null; email: string }
+  profile: { username: string | null; avatar_url: string | null; email: string; theme_preference?: string }
   onSignOut: () => Promise<void>
   activeTab: 'notes' | 'settings'
   setActiveTab: (tab: 'notes' | 'settings') => void
@@ -41,6 +42,16 @@ export default function Sidebar({
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null)
   const [editFolderName, setEditFolderName] = useState('')
   const [folderToDelete, setFolderToDelete] = useState<{ id: string; name: string } | null>(null)
+  const [avatarError, setAvatarError] = useState(false)
+
+  useEffect(() => {
+    setAvatarError(false)
+  }, [profile.avatar_url])
+
+  const theme = profile.theme_preference || 'theme-classic-light'
+  const logoSrc = (theme === 'theme-professional-dark' || theme === 'theme-modern-purple')
+    ? '/logo-c-white.png'
+    : '/logo.png'
 
   const handleCreateFolderSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,9 +76,8 @@ export default function Sidebar({
 
   return (
     <div
-      className={`relative flex flex-col border-r border-border-app bg-sidebar-bg text-sidebar-text transition-all duration-300 ${
-        collapsed ? 'w-16' : 'w-64'
-      }`}
+      className={`relative flex flex-col border-r border-border-app bg-sidebar-bg text-sidebar-text transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'
+        }`}
     >
       {/* Toggle collapse button */}
       <button
@@ -78,19 +88,25 @@ export default function Sidebar({
       </button>
 
       {/* Profile / Logo Panel */}
-      <div className={`p-4 border-b border-border-app flex items-center gap-3 ${collapsed ? 'justify-center' : ''}`}>
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-electric-blue to-accent-purple flex items-center justify-center text-white font-extrabold text-sm shrink-0">
-          Q
-        </div>
-        {!collapsed && (
-          <div className="flex flex-col min-w-0">
-            <span className="text-sm font-bold truncate">
-              {profile.username || 'User'}
-            </span>
-            <span className="text-[10px] opacity-60 truncate">
-              {profile.email}
-            </span>
-          </div>
+      <div className={`p-4 border-b border-border-app flex items-center gap-3 ${collapsed ? 'justify-center h-[69px]' : 'h-[69px]'}`}>
+        {!collapsed ? (
+          <Image
+            src={logoSrc}
+            alt="QuillInsight Logo"
+            width={150}
+            height={32}
+            className="h-16 w-auto object-contain select-none"
+            priority
+          />
+        ) : (
+          <Image
+            src="/logo-Icon.png"
+            alt="Q"
+            width={80}
+            height={80}
+            className="w-16 h-16 object-contain select-none"
+            priority
+          />
         )}
       </div>
 
@@ -104,11 +120,10 @@ export default function Sidebar({
               setActiveFolderId(null)
               setActiveTag(null)
             }}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border-none ${
-              activeTab === 'notes' && !activeFolderId && !activeTag
-                ? 'bg-electric-blue text-white shadow-sm'
-                : 'hover:bg-bg-app opacity-85'
-            } ${collapsed ? 'justify-center' : ''}`}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border-none ${activeTab === 'notes' && !activeFolderId && !activeTag
+              ? 'bg-electric-blue text-white shadow-sm'
+              : 'hover:bg-bg-app opacity-85'
+              } ${collapsed ? 'justify-center' : ''}`}
           >
             <FileText size={16} />
             {!collapsed && <span>All Notes</span>}
@@ -199,9 +214,8 @@ export default function Sidebar({
                     setActiveFolderId(folder.id)
                     setActiveTag(null)
                   }}
-                  className={`w-full group flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer border-none ${
-                    isActive ? 'bg-electric-blue/10 text-electric-blue font-semibold border-l-2 border-electric-blue' : 'hover:bg-bg-app opacity-85 text-sidebar-text'
-                  } ${collapsed ? 'justify-center' : ''}`}
+                  className={`w-full group flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer border-none ${isActive ? 'bg-electric-blue/10 text-electric-blue font-semibold border-l-2 border-electric-blue' : 'hover:bg-bg-app opacity-85 text-sidebar-text'
+                    } ${collapsed ? 'justify-center' : ''}`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <Folder size={16} className={isActive ? 'text-electric-blue' : 'opacity-70'} />
@@ -254,9 +268,8 @@ export default function Sidebar({
                       setActiveTag(isActive ? null : tag.name)
                       setActiveFolderId(null)
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer border-none ${
-                      isActive ? 'bg-accent-purple/10 text-accent-purple font-semibold' : 'hover:bg-bg-app opacity-85 text-sidebar-text'
-                    } ${collapsed ? 'justify-center' : ''}`}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer border-none ${isActive ? 'bg-accent-purple/10 text-accent-purple font-semibold' : 'hover:bg-bg-app opacity-85 text-sidebar-text'
+                      } ${collapsed ? 'justify-center' : ''}`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <Tag size={16} className={isActive ? 'text-accent-purple' : 'opacity-70'} />
@@ -276,26 +289,60 @@ export default function Sidebar({
       </div>
 
       {/* Footer controls panel */}
-      <div className="p-3 border-t border-border-app flex flex-col gap-1 bg-bg-app/20">
-        <button
-          onClick={() => setActiveTab('settings')}
-          className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border-none ${
-            activeTab === 'settings' ? 'bg-electric-blue/10 text-electric-blue' : 'hover:bg-bg-app opacity-85 text-sidebar-text'
-          } ${collapsed ? 'justify-center' : ''}`}
-        >
-          <Settings size={16} />
-          {!collapsed && <span>Personalize</span>}
-        </button>
+      <div className="p-3 flex flex-col gap-1 bg-bg-app/20">
+        <div className="px-3">
+          <div className={`flex items-center gap-3 ${collapsed ? 'justify-center w-full' : ''}`}>
+            {/* Avatar */}
+            <div
+              className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-tr from-electric-blue to-accent-purple text-white flex items-center justify-center font-bold shrink-0 shadow-md border border-border-app/40"
+              title={profile.username || profile.email}
+            >
+              {profile.avatar_url && !avatarError ? (
+                <img
+                  src={profile.avatar_url}
+                  alt={profile.username || 'User Avatar'}
+                  className="w-full h-full object-cover"
+                  onError={() => setAvatarError(true)}
+                />
+              ) : (
+                <span className="text-xs uppercase select-none">
+                  {(profile.username || profile.email || 'U').substring(0, 2)}
+                </span>
+              )}
+            </div>
 
-        <button
-          onClick={onSignOut}
-          className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold hover:bg-red-500/10 text-red-500 transition-all cursor-pointer border-none ${
-            collapsed ? 'justify-center' : ''
-          }`}
-        >
-          <LogOut size={16} />
-          {!collapsed && <span>Sign Out</span>}
-        </button>
+            {!collapsed && (
+              <div className="flex flex-col min-w-0">
+                <span className="text-sm font-bold truncate text-text-app">
+                  {profile.username || 'User'}
+                </span>
+                <span className="text-[10px] opacity-60 truncate text-text-app">
+                  {profile.email}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="p-3 border-t border-border-app flex flex-col gap-1 bg-bg-app/20">
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border-none ${activeTab === 'settings' ? 'bg-electric-blue/10 text-electric-blue' : 'hover:bg-bg-app opacity-85 text-sidebar-text'
+              } ${collapsed ? 'justify-center' : ''}`}
+          >
+            <Settings size={16} />
+            {!collapsed && <span>Personalize</span>}
+          </button>
+
+          <button
+            onClick={onSignOut}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold hover:bg-red-500/10 text-red-500 transition-all cursor-pointer border-none ${collapsed ? 'justify-center' : ''
+              }`}
+          >
+            <LogOut size={16} />
+            {!collapsed && <span>Sign Out</span>}
+          </button>
+        </div>
       </div>
 
       <ConfirmationModal

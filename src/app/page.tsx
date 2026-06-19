@@ -1,6 +1,8 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import Sandbox from '@/components/Sandbox'
 import { createClient } from '@/utils/supabase/server'
+import logo from '../../public/logo.png'
 
 export default async function Home() {
   const supabase = await createClient()
@@ -9,9 +11,9 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-bg-app text-text-app">
       {/* Header navbar */}
-      <header className="w-full border-b border-border-app px-6 py-4 flex items-center justify-between bg-bg-app/80 backdrop-blur-md sticky top-0 z-50">
-        <Link href="/" className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-electric-blue to-accent-purple bg-clip-text text-transparent">
-          QuillInsight
+      <header className="w-full border-b border-border-app px-16 py-2 flex items-center justify-between bg-bg-app/80 backdrop-blur-md sticky top-0 z-50">
+        <Link href="/" className="">
+          <Image src={logo} alt="Logo" width={150} height={50} />
         </Link>
         <nav className="flex items-center gap-4">
           {user ? (
