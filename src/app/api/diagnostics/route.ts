@@ -58,7 +58,7 @@ export async function GET() {
   // 2. Diagnose OpenRouter Configuration
   try {
     const openrouterKey = process.env.OPENROUTER_API_KEY
-    const model = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free'
+    const model = process.env.OPENROUTER_MODEL || 'openrouter/free'
 
     if (!openrouterKey || openrouterKey === 'your-openrouter-api-key') {
       report.openai = {

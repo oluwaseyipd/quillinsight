@@ -51,7 +51,7 @@ Fill in the credentials:
 *   `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase public Anon key (found in Settings -> API).
 *   `SUPABASE_SERVICE_ROLE_KEY`: Service role secret key (keep private, used for database triggers).
 *   `OPENROUTER_API_KEY`: Your OpenRouter developer API token. Can be generated for free.
-*   `OPENROUTER_MODEL` (Optional): The model to query. Defaults to `meta-llama/llama-3.3-70b-instruct:free`.
+*   `OPENROUTER_MODEL` (Optional): The model to query. Defaults to `openrouter/free`.
 
 ---
 

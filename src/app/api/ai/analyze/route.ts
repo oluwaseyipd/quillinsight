@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
     // 3. Verify OpenRouter key is configured
     const apiKey = process.env.OPENROUTER_API_KEY
-    const model = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free'
+    const model = process.env.OPENROUTER_MODEL || 'openrouter/free'
     if (!apiKey || apiKey === 'your-openrouter-api-key') {
       return NextResponse.json(
         { error: 'OpenRouter API key is not configured. Please add OPENROUTER_API_KEY to your .env.local file.' },
