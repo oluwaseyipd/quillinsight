@@ -26,17 +26,25 @@ export async function POST(request: Request) {
       )
     }
 
-    // 3. Verify OpenAI key is configured
-    const apiKey = process.env.OPENAI_API_KEY
-    if (!apiKey || apiKey === 'your-openai-api-key') {
+    // 3. Verify OpenRouter key is configured
+    const apiKey = process.env.OPENROUTER_API_KEY
+    const model = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free'
+    if (!apiKey || apiKey === 'your-openrouter-api-key') {
       return NextResponse.json(
-        { error: 'OpenAI API key is not configured. Please add OPENAI_API_KEY to your .env.local file.' },
+        { error: 'OpenRouter API key is not configured. Please add OPENROUTER_API_KEY to your .env.local file.' },
         { status: 400 }
       )
     }
 
-    // 4. Trigger OpenAI Chat completion using gpt-4o-mini
-    const openai = new OpenAI({ apiKey })
+    // 4. Trigger OpenRouter Chat completion
+    const openai = new OpenAI({
+      apiKey,
+      baseURL: 'https://openrouter.ai/api/v1',
+      defaultHeaders: {
+        'HTTP-Referer': 'https://quillinsight.vercel.app',
+        'X-Title': 'QuillInsight',
+      }
+    })
 
     const prompt = `
 You are QuillInsight's AI assistant. Analyze the note content provided below.
@@ -56,7 +64,7 @@ Ensure the response is strictly valid JSON matching the schema format.
 `
 
     const chatCompletion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model,
       messages: [{ role: 'user', content: prompt }],
       response_format: { type: 'json_object' },
     })
@@ -75,25 +83,25 @@ Ensure the response is strictly valid JSON matching the schema format.
   } catch (error: any) {
     console.error('AI Analysis API Error:', error)
 
-    const isQuotaError = error?.status === 429 || error?.code === 'insufficient_quota' || error?.message?.includes('quota')
-    const isAuthError = error?.status === 401 || error?.code === 'invalid_api_key' || error?.message?.includes('API key')
+    const isQuotaError = error?.status === 429 || error?.code === 'insufficient_quota' || error?.message?.includes('quota') || error?.message?.includes('429')
+    const isAuthError = error?.status === 401 || error?.code === 'invalid_api_key' || error?.message?.includes('API key') || error?.message?.includes('401')
 
     if (isQuotaError || isAuthError) {
       const wordCount = content.trim().split(/\s+/).length
       const titleLine = content.trim().split('\n')[0].replace(/[#*`]/g, '').trim()
       
       const errorContext = isQuotaError 
-        ? "OpenAI Quota Exceeded (429). Check your billing details."
-        : "OpenAI Auth Failed (401). Invalid API key in .env.local."
+        ? "OpenRouter Rate Limit Exceeded (429)."
+        : "OpenRouter Auth Failed (401). Invalid API key in .env.local."
 
       const summaryText = `[Mock Mode - ${errorContext}] This note details "${titleLine || 'Untitled Topic'}" containing ${wordCount} words.`
 
       return NextResponse.json({
         summary: summaryText,
-        tags: ['fallback', 'mock-ai', 'openai-limit'],
+        tags: ['fallback', 'mock-ai', 'openrouter-limit'],
         takeaways: [
-          'AI fallback dashboard summary activated due to OpenAI API restrictions.',
-          'Click tag buttons below to verify automatic folder and note tag assignments.',
+          'AI fallback dashboard summary activated due to OpenRouter API restrictions.',
+          'Click tag badges below to verify automatic folder and note tag assignments.',
           'Run a query on /api/diagnostics to test the exact status of your API key configurations.'
         ]
       })

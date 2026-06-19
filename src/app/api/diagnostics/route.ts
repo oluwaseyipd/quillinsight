@@ -55,22 +55,30 @@ export async function GET() {
     report.status = 'unhealthy'
   }
 
-  // 2. Diagnose OpenAI Configuration
+  // 2. Diagnose OpenRouter Configuration
   try {
-    const openaiKey = process.env.OPENAI_API_KEY
+    const openrouterKey = process.env.OPENROUTER_API_KEY
+    const model = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free'
 
-    if (!openaiKey || openaiKey === 'your-openai-api-key') {
+    if (!openrouterKey || openrouterKey === 'your-openrouter-api-key') {
       report.openai = {
         status: 'misconfigured',
-        message: 'Missing OPENAI_API_KEY. AI note summarization will fallback to mock data.',
+        message: 'Missing OPENROUTER_API_KEY. AI note summarization will fallback to mock data.',
       }
       if (report.status === 'healthy') report.status = 'degraded'
     } else {
-      const openai = new OpenAI({ apiKey: openaiKey })
+      const openai = new OpenAI({
+        apiKey: openrouterKey,
+        baseURL: 'https://openrouter.ai/api/v1',
+        defaultHeaders: {
+          'HTTP-Referer': 'https://quillinsight.vercel.app',
+          'X-Title': 'QuillInsight',
+        }
+      })
       
       // Perform a low-token model test call to verify API key validity
       const testCompletion = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: model,
         messages: [{ role: 'user', content: 'Say ok' }],
         max_tokens: 5,
       })
@@ -79,12 +87,12 @@ export async function GET() {
       if (reply) {
         report.openai = {
           status: 'connected',
-          message: `Successfully connected to OpenAI API. Test reply: "${reply}"`,
+          message: `Successfully connected to OpenRouter API using model "${model}". Test reply: "${reply}"`,
         }
       } else {
         report.openai = {
           status: 'error',
-          message: 'Connection succeeded but API returned an empty completion choice.',
+          message: `Connection succeeded but OpenRouter returned an empty completion for model "${model}".`,
         }
         if (report.status === 'healthy') report.status = 'degraded'
       }
@@ -92,7 +100,7 @@ export async function GET() {
   } catch (err: any) {
     report.openai = {
       status: 'failed',
-      message: `Failed to query OpenAI API: ${err?.message || err}`,
+      message: `Failed to query OpenRouter API: ${err?.message || err}`,
     }
     report.status = 'unhealthy'
   }

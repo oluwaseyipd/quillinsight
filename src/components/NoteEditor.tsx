@@ -360,12 +360,18 @@ export default function NoteEditor({
               </div>
             </div>
           ) : (
-            <textarea
-              placeholder="Write your note here... (Markdown supported)"
-              value={localContent}
-              onChange={(e) => handleContentChange(e.target.value)}
-              className="w-full flex-1 bg-transparent resize-none outline-none border-none text-text-app text-sm leading-relaxed font-sans"
-            />
+            <div className="w-full flex-1 flex flex-col min-h-0">
+              <textarea
+                placeholder="Write your note here... (Markdown supported)"
+                value={localContent}
+                maxLength={15000}
+                onChange={(e) => handleContentChange(e.target.value)}
+                className="w-full flex-1 bg-transparent resize-none outline-none border-none text-text-app text-sm leading-relaxed font-sans"
+              />
+              <div className="flex items-center justify-end text-[10px] opacity-40 select-none pt-2 border-t border-border-app/20 shrink-0">
+                <span>{localContent.length.toLocaleString()} / 15,000 characters</span>
+              </div>
+            </div>
           )}
         </div>
 

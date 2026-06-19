@@ -50,7 +50,8 @@ Fill in the credentials:
 *   `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase cloud project URL (e.g. `https://xxxx.supabase.co`).
 *   `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase public Anon key (found in Settings -> API).
 *   `SUPABASE_SERVICE_ROLE_KEY`: Service role secret key (keep private, used for database triggers).
-*   `OPENAI_API_KEY`: Your OpenAI developer API token.
+*   `OPENROUTER_API_KEY`: Your OpenRouter developer API token. Can be generated for free.
+*   `OPENROUTER_MODEL` (Optional): The model to query. Defaults to `meta-llama/llama-3.3-70b-instruct:free`.
 
 ---
 
@@ -171,7 +172,7 @@ Open [http://localhost:3000](http://localhost:3000) inside your web browser.
 To verify your API connections and environment configuration, navigate to the following URL in your browser:
 *   [http://localhost:3000/api/diagnostics](http://localhost:3000/api/diagnostics)
 
-It runs a real-time validation test connecting to Supabase and query testing OpenAI, responding with a clean JSON diagnostics report.
+It runs a real-time validation test connecting to Supabase and query testing OpenRouter, responding with a clean JSON diagnostics report.
 
 ---
 
@@ -188,5 +189,6 @@ It runs a real-time validation test connecting to Supabase and query testing Ope
     *   `NEXT_PUBLIC_SUPABASE_URL`
     *   `NEXT_PUBLIC_SUPABASE_ANON_KEY`
     *   `SUPABASE_SERVICE_ROLE_KEY`
-    *   `OPENAI_API_KEY`
+    *   `OPENROUTER_API_KEY`
+    *   `OPENROUTER_MODEL` (Optional)
 3.  Deploy production builds cleanly!
