@@ -6,6 +6,8 @@ Users can draft thoughts, structure notes inside custom folder hierarchies, labe
 
 ---
 
+[Homepage](https://res.cloudinary.com/ddk9omr4r/image/upload/v1782116598/quillinsight_qepfia.png)
+
 ## 🌟 Core Features
 
 *   **Public Landing Page & Guest Sandbox:** Try note editing and test real-time AI summarization in a client-side playground sandbox before creating an account.
