@@ -6,7 +6,9 @@ Users can draft thoughts, structure notes inside custom folder hierarchies, labe
 
 ---
 
-[Homepage](https://res.cloudinary.com/ddk9omr4r/image/upload/v1782116598/quillinsight_qepfia.png)
+### 🌐 Home Page Screenshot
+![Home Page Screenshot)](https://res.cloudinary.com/ddk9omr4r/image/upload/v1782116598/quillinsight_qepfia.png)
+
 
 ## 🌟 Core Features
 
